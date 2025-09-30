@@ -12,4 +12,39 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model ServerOutage {
+  id          Int       @id @default(autoincrement())
+  serverName  String
+  description String?
+  status      OutageStatus @default(ACTIVE)
+  startedAt   DateTime
+  resolvedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UpdateSet {
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String?
+  status        UpdateStatus @default(IN_PROGRESS)
+  createdBy     String
+  createdAt     DateTime     @default(now())
+  deployedAt    DateTime?
+}
+
+enum OutageStatus {
+  ACTIVE
+  RESOLVED
+  INVESTIGATING
+}
+
+enum UpdateStatus {
+  IN_PROGRESS
+  DEPLOYED
+  FAILED
+  CANCELED
 }
