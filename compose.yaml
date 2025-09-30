@@ -1,0 +1,13 @@
+name: dashboard-backend
+services:
+    postgres:
+        container_name: postgres
+        environment:
+            - POSTGRES_PASSWORD=1234
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        image: postgres:17.6-alpine3.22
+        ports:
+            - 5432:5432
+volumes:
+    postgres:
