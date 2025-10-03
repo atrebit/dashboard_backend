@@ -8,7 +8,7 @@ export async function GET() {
     {
       serverName: "DB-Server-01",
       description: "Connection timeout detected",
-      status: "ACTIVE",
+      status: OutageStatus.ACTIVE,
       startedAt: "2025-10-01T08:15:00Z",
       resolvedAt: null,
       createdAt: "2025-10-01T08:15:00Z",
@@ -17,7 +17,7 @@ export async function GET() {
     {
       serverName: "API-Gateway",
       description: "High latency observed",
-      status: "RESOLVED",
+      status: OutageStatus.RESOLVED,
       startedAt: "2025-09-28T14:00:00Z",
       resolvedAt: "2025-09-28T15:45:00Z",
       createdAt: "2025-09-28T14:00:00Z",
