@@ -1,34 +1,33 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/utils/db";
 import { Prisma, OutageStatus } from "@prisma/client";
+import axios, { AxiosResponse } from 'axios';
 
 export async function GET() {
 //  const outages = await prisma.serverOutage.findMany();
-  const data: Prisma.ServerOutageCreateInput[] = [
-    {
-      serverName: "DB-Server-01",
-      description: "Connection timeout detected",
-      status: OutageStatus.ACTIVE,
-      startedAt: "2025-10-01T08:15:00Z",
-      resolvedAt: null,
-      createdAt: "2025-10-01T08:15:00Z",
-      updatedAt: "2025-10-03T12:00:00Z"
-    },
-    {
-      serverName: "API-Gateway",
-      description: "High latency observed",
-      status: OutageStatus.RESOLVED,
-      startedAt: "2025-09-28T14:00:00Z",
-      resolvedAt: "2025-09-28T15:45:00Z",
-      createdAt: "2025-09-28T14:00:00Z",
-      updatedAt: "2025-09-28T15:45:00Z"
-    },
-    ];
+  axios.get('http://localhost/outages') // get request auf localhost/outages (JSON-Server antwortet)
+  .then(async function (response) { // im Falle einer positiven Antwort
+    await prisma.serverOutage.createMany({ // schreiben wir die Daten in auf die DB
+      data: response.data,
+    });// handle success
+  })
+  .catch(function (error) { // im Falle eines Fehlers beim Anfragen der Daten des JSON-Servers (z.B. Server nicht erreichbar), dann
+    // handle error
+    console.log(error); // Fehler in der Konsole ausgeben
+  });
 
-  await prisma.serverOutage.createMany({
-    data: data,
-    });
-  return NextResponse.json(data);
+  axios.get('http://localhost/updates') // get request auf localhost/outages (JSON-Server antwortet)
+  .then(async function (response) { // im Falle einer positiven Antwort
+    await prisma.updateSet.createMany({ // schreiben wir die Daten in auf die DB
+      data: response.data,
+    });// handle success
+  })
+  .catch(function (error) { // im Falle eines Fehlers beim Anfragen der Daten des JSON-Servers (z.B. Server nicht erreichbar), dann
+    // handle error
+    console.log(error); // Fehler in der Konsole ausgeben
+  });
+
+  return new NextResponse(null, { status: 200 }); // und geben die Daten als JSON-Antwort zurück
 }
 
 export async function POST(req: Request) {
