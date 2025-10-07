@@ -15,7 +15,8 @@ datasource db {
 }
 
 model ServerOutage {
-  id          Int       @id @default(autoincrement())
+  pk          Int       @id @default(autoincrement())
+  id          Int
   serverName  String
   description String?
   status      OutageStatus @default(ACTIVE)
@@ -26,7 +27,8 @@ model ServerOutage {
 }
 
 model UpdateSet {
-  id            Int          @id @default(autoincrement())
+  pk            Int          @id @default(autoincrement())
+  id            Int
   name          String
   description   String?
   status        UpdateStatus @default(IN_PROGRESS)
