@@ -6,8 +6,9 @@ import { initScheduler } from '@/lib/scheduler'
 const port = parseInt(process.env.PORT || '3000', 10)
 const isDev = process.env.NODE_ENV !== 'production'
 const app = next({ dev: isDev })
- 
-app.prepare().then(() => {
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {  // startet next.js app
   createServer((req, res) => {
     const parsedUrl = parse(req.url!, true)
     handle(req, res, parsedUrl)
@@ -19,6 +20,6 @@ app.prepare().then(() => {
     }`
   )
 
-  initScheduler();
+  initScheduler();  // Scheduler initialisieren
   console.log("Scheduler initialized");
 })
