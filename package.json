@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start"
+    "dev": "nodemon",
+    "build": "next build --turbopack && tsc -p tsconfig.server.json",
+    "start": "NODE_ENV=production node dist/server.js"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
     "axios": "^1.12.2",
     "next": "15.5.4",
+    "node-cron": "^4.2.1",
+    "nodemon": "^3.1.10",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/node": "^20",
