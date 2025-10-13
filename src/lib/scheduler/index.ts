@@ -3,7 +3,7 @@ import { prisma } from "@/utils/db";
 import axios from 'axios';
 
 export function initScheduler() {
-  cron.schedule("*/30 * * * * *", () => {
+  cron.schedule("5 * * * * *", () => {
       console.log("Requesting and storing data from UpStream-Service...");
       axios.get('http://localhost/outages') // get request auf localhost/outages (JSON-Server antwortet)
       .then(async function (response) { // im Falle einer positiven Antwort
