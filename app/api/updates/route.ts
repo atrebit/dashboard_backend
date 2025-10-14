@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/utils/db";
+import { updateService } from "@/lib/middleware/updateService";
 
 export async function GET(request: NextRequest) {
   const since = request.nextUrl.searchParams.get("since");
@@ -10,12 +10,21 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const updates = await prisma.updateSet.findMany({
-    where: {
-      createdAt: {
-        gte: new Date(since),
-      },
-    },
-  });
-  return NextResponse.json(updates);  // und geben die Daten als JSON-Antwort zurück
+  const sinceDate = new Date(since);
+  if (isNaN(sinceDate.getTime())) {
+    return NextResponse.json(
+      { error: "Given value for since is not a valid date" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const updates = await updateService.getUpdatesSince(sinceDate);
+    return NextResponse.json(updates);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch updates" },
+      { status: 500 }
+    );
+  }
 }

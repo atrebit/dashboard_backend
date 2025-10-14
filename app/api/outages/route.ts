@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/utils/db";
+import { outageService } from "@/lib/middleware/outageService";
 
 export async function GET(request: NextRequest) {
   const since = request.nextUrl.searchParams.get("since");
@@ -10,12 +11,21 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const outages = await prisma.serverOutage.findMany({
-    where: {
-      createdAt: {
-        gte: new Date(since),
-      },
-    },
-  });
-  return NextResponse.json(outages);  // und geben die Daten als JSON-Antwort zurück
+  const sinceDate = new Date(since);
+  if (isNaN(sinceDate.getTime())) {
+    return NextResponse.json(
+      { error: "Given value for since is not a valid date" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const outages = await outageService.getOutagesSince(sinceDate);
+    return NextResponse.json(outages);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch updates" },
+      { status: 500 }
+    );
+  }
 }
