@@ -9,17 +9,17 @@ services:
         image: postgres:17.6-alpine3.22
         ports:
             - 5432:5432
-    #dashboard_backend:
-    #    volumes:
-     #       - .:/app
-     #   container_name: dashboard_backend
-      #  build: .
-       # environment:
-        #    - DATABASE_URL=${DATABASE_URL}
-        #depends_on:
-        #    - postgres
-        #ports:
-         #   - 3000:3000
+    dashboard_backend:
+        volumes:
+        - .:/app
+        container_name: dashboard_backend
+        build: .
+        environment:
+        - DATABASE_URL=${DOCKER_DATABASE_URL}
+        depends_on:
+        - postgres
+        ports:
+        - 3000:3000
     json-server:
         ports:
             - 80:80
