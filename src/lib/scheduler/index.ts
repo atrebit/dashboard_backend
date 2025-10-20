@@ -2,7 +2,7 @@ import cron from "node-cron";
 import { prisma } from "@/utils/db";
 import axios from 'axios';
 
-const baseUrl = process.env.JSON_SERVER_URL;
+const baseUrl = process.env.UPSTREAM_SERVER_URL;
 
 if (!baseUrl) {
   throw new Error("Error: Environment variable in 'UPSTREAM_SERVER_URL' is not defined.");
@@ -11,7 +11,7 @@ if (!baseUrl) {
 export function initScheduler() {
   cron.schedule("5 * * * * *", () => {
       console.log("Requesting and storing data from UpStream-Service...");
-      axios.get('http://json-server/outages') // get request auf localhost/outages (JSON-Server antwortet)
+      axios.get(`${baseUrl}/outages`) // get request auf localhost/outages (JSON-Server antwortet)
       .then(async function (response) { // im Falle einer positiven Antwort
         await prisma.serverOutage.createMany({ // schreiben wir die Daten in auf die DB
           data: response.data,
@@ -22,7 +22,7 @@ export function initScheduler() {
         console.log(error); // Fehler in der Konsole ausgeben
       });
 
-      axios.get('`${baseUrl}/updates`) // get request auf localhost/outages (JSON-Server antwortet)
+      axios.get(`${baseUrl}/updates`) // get request auf localhost/outages (JSON-Server antwortet)
       .then(async function (response) { // im Falle einer positiven Antwort
         await prisma.updateSet.createMany({ // schreiben wir die Daten in auf die DB
           data: response.data,
