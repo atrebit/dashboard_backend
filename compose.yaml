@@ -9,6 +9,7 @@ services:
         image: postgres:17.6-alpine3.22
         ports:
             - 5432:5432
+        restart: always
     dashboard_backend:
         volumes:
         - .:/app
@@ -16,15 +17,19 @@ services:
         build: .
         environment:
         - DATABASE_URL=${DOCKER_DATABASE_URL}
+        - UPSTREAM_SERVER_URL=http://json-server
         depends_on:
         - postgres
+        - json-server
         ports:
         - 3000:3000
+        restart: always
     json-server:
         ports:
             - 80:80
         volumes:
             - ./json-server/db.json:/data/db.json
         image: clue/json-server
+        restart: always
 volumes:
     postgres:
