@@ -8,29 +8,31 @@ if (!baseUrl) {
   throw new Error("Error: Environment variable in 'UPSTREAM_SERVER_URL' is not defined.");
 }
 
+/**
+ * Übergeben einer anonymen Funktion an den Scheduler, die in regelmäßigen Abständen Daten von einem UpStream-Service anfragt und in der lokalen Datenbank speichert.
+ */
+
 export function initScheduler() {
   cron.schedule("5 * * * * *", () => {
       console.log("Requesting and storing data from UpStream-Service...");
-      axios.get(`${baseUrl}/outages`) // get request auf localhost/outages (JSON-Server antwortet)
-      .then(async function (response) { // im Falle einer positiven Antwort
-        await prisma.serverOutage.createMany({ // schreiben wir die Daten in auf die DB
+      axios.get(`${baseUrl}/outages`) 
+      .then(async function (response) { 
+        await prisma.serverOutage.createMany({ 
           data: response.data,
-        });// handle success
+        });
       })
-      .catch(function (error) { // im Falle eines Fehlers beim Anfragen der Daten des JSON-Servers (z.B. Server nicht erreichbar), dann
-        // handle error
-        console.log(error); // Fehler in der Konsole ausgeben
+      .catch(function (error) { 
+        console.log(error); 
       });
 
-      axios.get(`${baseUrl}/updates`) // get request auf localhost/outages (JSON-Server antwortet)
-      .then(async function (response) { // im Falle einer positiven Antwort
-        await prisma.updateSet.createMany({ // schreiben wir die Daten in auf die DB
+      axios.get(`${baseUrl}/updates`) 
+      .then(async function (response) { 
+        await prisma.updateSet.createMany({ 
           data: response.data,
-        });// handle success
+        });
       })
-      .catch(function (error) { // im Falle eines Fehlers beim Anfragen der Daten des JSON-Servers (z.B. Server nicht erreichbar), dann
-        // handle error
-        console.log(error); // Fehler in der Konsole ausgeben
+      .catch(function (error) { 
+        console.log(error); 
       });
     
   });
