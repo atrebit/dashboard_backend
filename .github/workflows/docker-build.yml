@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  REGISTRY_URL: localhost:5000
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,5 +24,5 @@ jobs:
         with:
           context: .
           push: false
-          tags: dashboard_backend:latest
+          tags: $REGISTRY_URL/dashboard_backend:latest
           platforms: linux/amd64,linux/arm64
