@@ -24,5 +24,5 @@ jobs:
         with:
           context: .
           push: false
-          tags: $REGISTRY_URL/dashboard_backend:latest
+          tags: dashboard_backend:latest
           platforms: linux/amd64,linux/arm64
