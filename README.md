@@ -132,7 +132,7 @@ The workflow:
 
 1. Checks out the repository
 2. Sets up Docker Buildx
-3. Builds the Docker image for `linux/amd64` and `linux/arm64`
+3. Builds the Docker image for `linux/amd64`
 
 The workflow runs on pushes to `main` and on pull requests.
 
