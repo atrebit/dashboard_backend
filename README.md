@@ -1,7 +1,10 @@
 # Dashboard Backend
 
-This repository contains the backend service of the **ServiceNow Dashboard Integration Project**, designed to collect, process, and expose ITSM data through RESTful APIs for integration into ServiceNow dashboards.  
-The application is containerized via Docker and uses **PostgreSQL** as its primary data store.
+This repository contains the public portfolio version of my 2025 final software development project.
+
+The application implements a backend service that periodically retrieves defined data from a simulated upstream service, persists it in PostgreSQL, and exposes it through REST endpoints for a ServiceNow Platform Analytics dashboard use case.
+
+The public version uses JSON Server to simulate the upstream system. The project was developed and demonstrated in a local environment; no production deployment was performed.
 
 ---
 
@@ -22,8 +25,9 @@ Ensure that all required components are installed and accessible via your system
 
 ### Initialization
 
-The project uses **npm** as its local package manager.  
-To install all dependencies, navigate to the `/app` directory and run:
+The project uses **npm** for dependency management.
+
+To install the dependencies locally, run the following command from the repository root:
 
 ```bash
 > npm install
@@ -97,14 +101,14 @@ The diagram below illustrates the overall system architecture, showing how the s
 
 ## Key Components
 
-| Component                   | Description                                                           |
-| --------------------------- | --------------------------------------------------------------------- |
-| **Scheduler**               | Periodically fetches and stores data from the upstream API            |
-| **API Layer (Next.js)**     | Exposes REST endpoints for ITSM data retrieval                        |
-| **Database Layer (Prisma)** | Defines models and migration logic for `ServerOutage` and `UpdateSet` |
-| **Logger**                  | Captures errors and process logs                                      |
-| **Docker Setup**            | Provides isolated and reproducible runtime environment                |
-| **CI/CD Pipeline**          | Automates builds and deployments via GitHub Actions                   |
+| Component                   | Description                                                                         |
+| --------------------------- | ----------------------------------------------------------------------------------- |
+| **Scheduler**               | Periodically fetches and stores data from the upstream API                          |
+| **API Layer (Next.js)**     | Exposes REST endpoints for ITSM data retrieval                                      |
+| **Database Layer (Prisma)** | Defines models and migration logic for `ServerOutage` and `UpdateSet`               |
+| **Logger**                  | Captures errors and process logs                                                    |
+| **Docker Setup**            | Provides isolated and reproducible runtime environment                              |
+| **Github Actions**          | Verifies Docker image builds for amd64 and arm64; no image publishing or deployment |
 
 ---
 
@@ -121,17 +125,21 @@ The diagram below illustrates the overall system architecture, showing how the s
 
 ## Continuous Integration
 
-A **GitHub Actions** pipeline ensures consistent build and deployment processes.  
-It includes the following steps:
+The repository includes a GitHub Actions workflow for automated Docker build verification.
 
-1. Install dependencies
-2. Run build and lint checks
-3. Build the Docker image
-4. Push the image to the container registry
-5. Deploy to the target environment
+The workflow:
 
-The workflow is defined in `.github/workflows/ci.yml`.  
-The pipeline also runs automated code style checks to maintain quality across all TypeScript sources.
+1. Checks out the repository
+2. Sets up Docker Buildx
+3. Builds the Docker image for `linux/amd64` and `linux/arm64`
+
+The workflow runs on pushes to `main` and on pull requests.
+
+Image publishing is intentionally disabled (`push: false`), and no deployment step is configured. The workflow therefore verifies that the container image can be built successfully but does not publish or deploy it.
+
+The workflow is defined in `.github/workflows/docker-build.yml`.
+
+Automated application tests and linting are not currently part of this workflow.
 
 ---
 
