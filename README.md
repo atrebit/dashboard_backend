@@ -81,12 +81,13 @@ Docker Compose automatically triggers a build when starting the stack, but manua
 
 ## Database
 
-The backend uses **PostgreSQL 17** together with **Prisma ORM** for schema management and database access.  
-The schema is defined in `prisma/schema.prisma`, and migrations are executed automatically during container startup.
+```md
+The backend uses **PostgreSQL 17** together with **Prisma ORM** for schema management and database access.
+The database schema is defined in `prisma/schema.prisma`. Prisma Client is generated during the Docker image build, while database migrations must be applied explicitly when required.
 
 ```bash
-> npx prisma migrate deploy #Apply pending migrations to the database in production/staging
-> npx prisma studio #Start Studio on the default port
+> npx prisma migrate deploy   # Apply pending migrations
+> npx prisma studio           # Open Prisma Studio
 ```
 
 ---
